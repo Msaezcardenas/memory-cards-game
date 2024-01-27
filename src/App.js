@@ -1,8 +1,14 @@
 import { useEffect, useState } from 'react';
 import './App.css';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
   const [cardsInformation, setCardsInformation] = useState(null);
+  const [cards, setCards] = useState([]);
+  const [turns, setTurns] = useState(0);
 
   useEffect(() => {
     fetch(
@@ -22,15 +28,32 @@ const App = () => {
       }),
     );
 
-    const cardList = [...test, ...test];
-    console.log(cardList);
+    const cardList = [...test, ...test]
+      .sort(() => Math.random() - 0.5)
+      .map((card) => ({ card, id: Math.random() }));
+
+    setCards(cardList);
+    setTurns(0);
   };
 
-  shuffledCards();
+  cards && console.log(cards, turns);
 
   return (
     <div className='App'>
       <h1> Memory Cards Game</h1>
+      <button onClick={shuffledCards}> New game</button>
+
+      <Container>
+        <Row>
+          <Col sm={8}>sm=8</Col>
+          <Col sm={4}>sm=4</Col>
+        </Row>
+        <Row>
+          <Col sm>sm=true</Col>
+          <Col sm>sm=true</Col>
+          <Col sm>sm=true</Col>
+        </Row>
+      </Container>
     </div>
   );
 };
