@@ -16,7 +16,7 @@ const App = () => {
       shuffledCards(cardsInformation);
     } else {
       fetch(
-        'https://fed-team.modyo.cloud/api/content/spaces/animals/types/game/entries?per_page=5',
+        'https://fed-team.modyo.cloud/api/content/spaces/animals/types/game/entries?per_page=6',
       )
         .then((response) => response.json())
         .then((data) => {
@@ -47,23 +47,13 @@ const App = () => {
         {' '}
         Restart Game
       </Button>
-      <Container className='mt-4 '>
+      <Container className='mt-4  card-grid'>
         {cards &&
           cards.map((card) => (
-            <div className='card' key={card.id}>
+            <div className='card md={8}' key={card.id}>
               <img src={card.card} />
             </div>
           ))}
-
-        <Row>
-          <Col sm={8}>sm=8</Col>
-          <Col sm={4}>sm=4</Col>
-        </Row>
-        <Row>
-          <Col sm>sm=true</Col>
-          <Col sm>sm=true</Col>
-          <Col sm>sm=true</Col>
-        </Row>
       </Container>
     </div>
   );

@@ -27,3 +27,14 @@ button.btn:hover {
   background: #e3ffef;
   color: #3c0753;
 }
+
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-gap: 20px;
+}
+
+img {
+  object-fit: cover;
+  height: 100%;
+}
