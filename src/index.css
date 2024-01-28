@@ -1,16 +1,5 @@
-*,
-::after,
-::before {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html {
-  font-size: 100%;
-} /*16px*/
-
 body {
-  background-color: --background-color;
-  font-weight: 400;
+  margin: 0;
+  text-align: center;
+  background: #910a67 !important;
 }
