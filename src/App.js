@@ -56,15 +56,13 @@ const App = () => {
             if (card.card === choiceOne.card) {
               return { ...card, matched: true };
             } else {
-              setTimeout(() => resetTurn(), 100000);
               return card;
             }
           });
         });
         resetTurn();
       } else {
-        setTimeout(() => resetTurn(), 100000);
-        resetTurn();
+        setTimeout(() => resetTurn(), 1000);
       }
     }
   }, [choiceOne, choiceTwo]);
@@ -79,7 +77,6 @@ const App = () => {
     <div className='App' variant='dark'>
       <h1> Memory Cards Game</h1>
       <Button className='btn' onClick={shuffledCards}>
-        {' '}
         Restart Game
       </Button>
       <Container className='mt-4  card-grid'>
