@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/memory-cards-game/static/css/main.1dfd07c8.css",
+    "main.js": "/memory-cards-game/static/js/main.f5117b41.js",
+    "static/media/zebra.png": "/memory-cards-game/static/media/zebra.1e147c0c1d31e0cd8cfb.png",
+    "index.html": "/memory-cards-game/index.html",
+    "main.1dfd07c8.css.map": "/memory-cards-game/static/css/main.1dfd07c8.css.map",
+    "main.f5117b41.js.map": "/memory-cards-game/static/js/main.f5117b41.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.1dfd07c8.css",
+    "static/js/main.f5117b41.js"
+  ]
+}
