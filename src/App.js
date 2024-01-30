@@ -18,10 +18,17 @@ const App = () => {
   const [showModal, setShowModal] = useState(false);
   const [successes, setSuccesses] = useState(0);
   const [mistakes, setMistakes] = useState(0);
+  const [winner, setWinner] = useState(false);
 
   const { data, loading, error } = useFetch(
-    'https://fed-team.modyo.cloud/api/content/spaces/animals/types/game/entries?per_page=6',
+    'https://fed-team.modyo.cloud/api/content/spaces/animals/types/game/entries?per_page=8',
   );
+
+  useEffect(() => {
+    if (cards.length > 0 && cards.length / 2 === successes) {
+      setWinner(true);
+    }
+  }, [successes]);
 
   useEffect(() => {
     setShowModal(true);
@@ -32,7 +39,7 @@ const App = () => {
     if (!loading) shuffledCards(data);
   }, [loading]);
 
-  //shuffled
+  //shuffled cards and prepare array
   const shuffledCards = async () => {
     setChoiceOne(null);
     setChoiceTwo(null);
@@ -49,6 +56,7 @@ const App = () => {
     setCards(cardList);
     setSuccesses(0);
     setMistakes(0);
+    setWinner(false);
   };
 
   const handleChoice = (card) => {
@@ -89,7 +97,11 @@ const App = () => {
     <div className='App' variant='dark'>
       <h1> Memory Cards Game</h1>
       <br />
-      <h3> Hola {name} comencemos a jugar !</h3>
+      {winner ? (
+        <h3> Has Ganado !!! </h3>
+      ) : (
+        <h3> Hola {name} comencemos a jugar !</h3>
+      )}
       <div className='score'>
         <p> Aciertos: {successes} </p>
         <p> - </p>
