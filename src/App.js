@@ -6,51 +6,61 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Card from './Card';
+import useFetch from './useFetch';
+import ModalName from './ModalName';
 
 const App = () => {
-  const [cardsInformation, setCardsInformation] = useState(null);
   const [cards, setCards] = useState([]);
-  const [turns, setTurns] = useState(0);
   const [choiceOne, setChoiceOne] = useState(null);
   const [choiceTwo, setChoiceTwo] = useState(null);
+  const [disabled, setDisabled] = useState(false);
+  const [name, setName] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [successes, setSuccesses] = useState(0);
+  const [mistakes, setMistakes] = useState(0);
+
+  const { data, loading, error } = useFetch(
+    'https://fed-team.modyo.cloud/api/content/spaces/animals/types/game/entries?per_page=6',
+  );
 
   useEffect(() => {
-    if (cardsInformation) {
-      shuffledCards(cardsInformation);
-    } else {
-      fetch(
-        'https://fed-team.modyo.cloud/api/content/spaces/animals/types/game/entries?per_page=6',
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          setCardsInformation(data?.entries);
-        });
-    }
-  }, [cardsInformation]);
+    setShowModal(true);
+  }, []);
 
+  //first load and shuffle
+  useEffect(() => {
+    if (!loading) shuffledCards(data);
+  }, [loading]);
+
+  //shuffled
   const shuffledCards = async () => {
+    setChoiceOne(null);
+    setChoiceTwo(null);
     let test = await Promise.all(
-      cardsInformation &&
-        cardsInformation.map(async (card) => {
-          const imagenObject = card?.fields?.image;
-          return imagenObject.url;
-        }),
+      data?.map(async (card) => {
+        const imagenObject = card?.fields?.image?.url;
+        return imagenObject;
+      }),
     );
+
     const cardList = [...test, ...test]
       .sort(() => Math.random() - 0.5)
       .map((card) => ({ card, id: Math.random(), matched: false }));
     setCards(cardList);
-    setTurns(0);
+    setSuccesses(0);
+    setMistakes(0);
   };
 
   const handleChoice = (card) => {
-    console.log(card);
     choiceOne ? setChoiceTwo(card) : setChoiceOne(card);
   };
 
+  //compare chosen cards
   useEffect(() => {
     if (choiceOne && choiceTwo) {
+      setDisabled(true);
       if (choiceOne.card === choiceTwo.card) {
+        setSuccesses((prevTurns) => prevTurns + 1);
         setCards((prevCards) => {
           return prevCards.map((card) => {
             if (card.card === choiceOne.card) {
@@ -62,34 +72,50 @@ const App = () => {
         });
         resetTurn();
       } else {
+        setMistakes((prevTurns) => prevTurns + 1);
         setTimeout(() => resetTurn(), 1000);
       }
     }
   }, [choiceOne, choiceTwo]);
 
+  //reset turns and increase turn
   const resetTurn = () => {
     setChoiceOne(null);
     setChoiceTwo(null);
-    setTurns((prevTurns) => prevTurns + 1);
+    setDisabled(false);
   };
 
   return (
     <div className='App' variant='dark'>
       <h1> Memory Cards Game</h1>
+      <br />
+      <h3> Hola {name} comencemos a jugar !</h3>
+      <div className='score'>
+        <p> Aciertos: {successes} </p>
+        <p> - </p>
+        <p> Errores: {mistakes} </p>
+      </div>
+
       <Button className='btn' onClick={shuffledCards}>
         Restart Game
       </Button>
       <Container className='mt-4  card-grid'>
-        {cards &&
-          cards.map((card) => (
-            <Card
-              card={card}
-              key={card.id}
-              handleChoice={handleChoice}
-              flipped={card === choiceOne || card === choiceTwo || card.matched}
-            />
-          ))}
+        {cards?.map((card) => (
+          <Card
+            card={card}
+            key={card.id}
+            handleChoice={handleChoice}
+            flipped={card === choiceOne || card === choiceTwo || card.matched}
+            disabled={disabled}
+          />
+        ))}
       </Container>
+      <ModalName
+        name={name}
+        setName={setName}
+        showModal={showModal}
+        setShowModal={setShowModal}
+      />
     </div>
   );
 };
